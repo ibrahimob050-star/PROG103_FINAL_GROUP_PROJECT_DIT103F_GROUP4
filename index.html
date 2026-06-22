@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✦ School Manager Pro</title>
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #0b1424;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background-image: radial-gradient(ellipse at 20% 30%, #132a44 0%, #080e1a 80%);
+    }
+
+    /* ---------- main container ---------- */
+    .app-container {
+      width: 100%;
+      max-width: 1300px;
+      background: rgba(14, 26, 48, 0.65);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 56px;
+      padding: 2rem 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7);
+      transition: all 0.2s;
+    }
+
+    /* ---------- login screens ---------- */
+    .login-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 30px;
+      padding: 1.5rem 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      transition: 0.2s;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .login-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(100, 180, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .login-card i {
+      font-size: 2rem;
+      color: #7eb2ff;
+      margin-bottom: 8px;
+    }
+
+    .login-card h4 {
+      color: #d6e7ff;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+    }
+
+    .login-card p {
+      color: #7c9ec9;
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+
+    .login-card.active {
+      background: rgba(60, 130, 220, 0.15);
+      border: 1px solid #3f8aff;
+      box-shadow: 0 0 30px rgba(60, 130, 255, 0.1);
+    }
+
+    /* ---------- dashboard header ---------- */
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      padding-bottom: 1.2rem;
+    }
+
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .dash-title i {
+      font-size: 2.2rem;
+      color: #8bb8ff;
+    }
+
+    .dash-title h2 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #eaf4ff, #a6c8ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .user-badge {
+      background: rgba(255,255,255,0.05);
+      padding: 0.4rem 1.6rem;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: #b8d6ff;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-badge i {
+      color: #6aaaff;
+    }
+
+    .logout-btn {
+      background: rgba(255, 70, 90, 0.1);
+      border: 1px solid rgba(255, 70, 90, 0.15);
+      color: #ff8a9a;
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 70, 90, 0.2);
+      color: #ffb0bc;
+    }
+
+    /* ---------- panels ---------- */
+    .panel {
+      display: none;
+      animation: fadeSlide 0.25s ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0.3; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- teacher / admin forms ---------- */
+    .form-card {
+      background: rgba(0, 10, 30, 0.4);
+      border-radius: 32px;
+      padding: 1.8rem 2rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.2rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .input-group {
+      flex: 1 0 160px;
+      min-width: 140px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #8bb6e6;
+      margin-bottom: 5px;
+    }
+
+    .input-group input, .input-group select {
+      width: 100%;
+      background: rgba(0, 8, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 60px;
+      padding: 0.75rem 1.2rem;
+      font-size: 0.9rem;
+      color: #e5f0ff;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      border-color: #3f8aff;
+      box-shadow: 0 0 0 4px rgba(60, 130, 255, 0.1);
+    }
+
+    .btn {
+      background: linear-gradient(145deg, #3d7fc7, #1f5a9e);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.15s;
+      box-shadow: 0 6px 20px rgba(30, 80, 180, 0.25);
+    }
+
+    .btn:hover {
+      transform: scale(0.97);
+      background: linear-gradient(145deg, #4d8fd9, #2666b0);
+    }
+
+    .btn-danger {
+      background: linear-gradient(145deg, #b04a5a, #8f3342);
+      box-shadow: 0 6px 20px rgba(180, 60, 80, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(145deg, #c95a6b, #9f3d4e);
+    }
+
+    .btn-outline {
+      background: transparent;
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #b8d6ff;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.04);
+      transform: none;
+    }
+
+    /* ---------- table ---------- */
+    .table-wrap {
+      border-radius: 28px;
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.03);
+      background: rgba(0, 8, 20, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      min-width: 500px;
+    }
+
+    th {
+      text-align: left;
+      padding: 1.2rem 1.5rem 0.8rem 1.5rem;
+      color: #8bb6e6;
+      font-weight: 500;
+      font-size: 0.7rem;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      color: #d6e7ff;
+      vertical-align: middle;
+    }
+
+    .badge-id {
+      background: rgba(60, 130, 220, 0.12);
+      padding: 0.15rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .action-icons i {
+      font-size: 1.1rem;
+      margin: 0 5px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 30px;
+      color: #7fa9d6;
+      transition: 0.1s;
+    }
+
+    .action-icons i:hover {
+      background: rgba(255,255,255,0.04);
+      color: white;
+    }
+
+    .action-icons .fa-trash-alt { color: #cf7a85; }
+    .action-icons .fa-trash-alt:hover { background: rgba(200, 70, 90, 0.12); color: #ff9aa8; }
+
+    .empty-row td {
+      text-align: center;
+      padding: 2.8rem 1.5rem;
+      color: #6a8db0;
+    }
+
+    /* ---------- student subject view ---------- */
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .subject-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+      padding: 1.4rem 1.2rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+      backdrop-filter: blur(4px);
+      transition: 0.15s;
+    }
+
+    .subject-card i {
+      font-size: 2rem;
+      color: #6aaaff;
+      margin-bottom: 6px;
+    }
+
+    .subject-card h5 {
+      color: #d6e7ff;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .subject-card p {
+      color: #7c9ec9;
+      font-size: 0.8rem;
+    }
+
+    .student-info-box {
+      background: rgba(0, 10, 30, 0.3);
+      border-radius: 24px;
+      padding: 1.2rem 2rem;
+      border: 1px solid rgba(255,255,255,0.03);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .student-info-box span {
+      color: #b8d6ff;
+      font-weight: 500;
+    }
+
+    .student-info-box i {
+      color: #6aaaff;
+      margin-right: 8px;
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 700px) {
+      .app-container { padding: 1.5rem; }
+      .login-grid { grid-template-columns: 1fr; }
+      .form-card { flex-direction: column; align-items: stretch; }
+      .input-group { flex: 1 0 auto; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+  <!-- LOGIN ROW -->
+  <div class="login-grid" id="loginGrid">
+    <div class="login-card active" data-role="admin"><i class="fas fa-user-shield"></i><h4>Admin</h4><p>manage everything</p></div>
+    <div class="login-card" data-role="teacher"><i class="fas fa-chalkboard-teacher"></i><h4>Teacher</h4><p>manage students &amp; grades</p></div>
+    <div class="login-card" data-role="student"><i class="fas fa-user-graduate"></i><h4>Student</h4><p>view subjects &amp; marks</p></div>
+  </div>
+
+  <!-- ====== ADMIN PANEL ====== -->
+  <div class="panel active" id="panelAdmin">
+    <div class="dash-header">
+      <div class="dash-title"><i class="fas fa-crown"></i><h2>Admin · Control</h2></div>
+      <div><span class="user-badge"><i class="fas fa-user-check"></i> admin</span></div>
+    </div>
+    <p style="color:#8bb6e6; margin-bottom:1.5rem; font-weight:300;">👑 Full system control — manage teachers, students, and subjects.</p>
+    <div class="form-card">
+      <div class="input-group"><label><i class="fas fa-user"></i> Teacher name</label><input type="text" id="adminTeacherName" placeholder="e.g. Mr. Clark"></div>
+      <div class="input-group"><label><i class="fas fa-id-badge"></i> Teacher ID</label><input type="text" id="adminTeacherId" placeholder="T-101"></div>
+      <button class="btn" id="adminAddTeacherBtn"><i class="fas fa-plus-circle"></i> Add Teacher</button>
+    </div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Name</th><th>ID</th><th>Actions</th></tr></thead>
+        <tbody id="adminTeacherTable"><tr class="empty-row"><td colspan="3">📋 no teachers registered</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ====== TEACHER PANEL ====== -->
+  <div class="panel" id="panelTeacher">
+    <div class="dash-header">
+      <div class="dash-title"><i class="fas fa-chalkboard"></i><h2>Teacher · Dashboard</h2></div>
+      <div><span class="user-badge"><i class="fas fa-user"></i> <span id="teacherNameDisplay">Mr. Clark</span></span></div>
+    </div>
+    <p style="color:#8bb6e6; margin-bottom:1rem; font-weight:300;">📚 manage student credentials &amp; subjects</p>
+    <div class="form-card">
+      <div class="input-group"><label><i class="fas fa-user-graduate"></i> Student name</label><input type="text" id="teacherStudentName" placeholder="e.g. Emma Watson"></div>
+      <div class="input-group"><label><i class="fas fa-id-card"></i> Student ID</label><input type="text" id="teacherStudentId" placeholder="S-202"></div>
+      <div class="input-group"><label><i class="fas fa-envelope"></i> Email</label><input type="email" id="teacherStudentEmail" placeholder="emma@school.edu"></div>
+      <button class="btn" id="teacherAddStudentBtn"><i class="fas fa-user-plus"></i> Add Student</button>
+    </div>
+    <div class="table-wrap">
+      <table><thead><tr><th>Name</th><th>ID</th><th>Email</th><th style="text-align:right;">Actions</th></tr></thead>
+        <tbody id="teacherStudentTable"><tr class="empty-row"><td colspan="4">📌 no students yet</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ====== STUDENT PANEL ====== -->
+  <div class="panel" id="panelStudent">
+    <div class="dash-header">
+      <div class="dash-title"><i class="fas fa-graduation-cap"></i><h2>Student · Portal</h2></div>
+      <div><span class="user-badge"><i class="fas fa-user"></i> <span id="studentNameDisplay">Emma Watson</span></span></div>
+    </div>
+    <div class="student-info-box">
+      <span><i class="fas fa-id-card"></i> ID: <strong id="studentIdDisplay">S-202</strong></span>
+      <span><i class="fas fa-envelope"></i> <span id="studentEmailDisplay">emma@school.edu</span></span>
+    </div>
+    <h4 style="color:#b8d6ff; font-weight:500; margin-bottom:0.8rem;"><i class="fas fa-book-open"></i> enrolled subjects</h4>
+    <div class="subject-grid" id="studentSubjectGrid">
+      <!-- dynamic -->
+    </div>
+    <p style="color:#6a8db0; margin-top:1rem; font-size:0.9rem;"><i class="fas fa-info-circle"></i> subjects &amp; marks managed by teacher</p>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- DATA STORE -----
+    let teachers = [
+      { name: 'Mr. Clark', id: 'T-101' }
+    ];
+    let students = [
+      { name: 'Emma Watson', id: 'S-202', email: 'emma@school.edu', subjects: ['Mathematics', 'Physics', 'Literature'] },
+      { name: 'Liam Carter', id: 'S-203', email: 'liam@school.edu', subjects: ['Chemistry', 'Biology'] }
+    ];
+
+    // current role: admin | teacher | student
+    let currentRole = 'admin';
+    let currentTeacher = teachers[0]; // for teacher view
+
+    // ----- DOM refs -----
+    const panels = {
+      admin: document.getElementById('panelAdmin'),
+      teacher: document.getElementById('panelTeacher'),
+      student: document.getElementById('panelStudent')
+    };
+    const loginCards = document.querySelectorAll('.login-card');
+
+    // admin
+    const adminTeacherName = document.getElementById('adminTeacherName');
+    const adminTeacherId = document.getElementById('adminTeacherId');
+    const adminAddTeacherBtn = document.getElementById('adminAddTeacherBtn');
+    const adminTeacherTable = document.getElementById('adminTeacherTable');
+
+    // teacher
+    const teacherNameDisplay = document.getElementById('teacherNameDisplay');
+    const teacherStudentName = document.getElementById('teacherStudentName');
+    const teacherStudentId = document.getElementById('teacherStudentId');
+    const teacherStudentEmail = document.getElementById('teacherStudentEmail');
+    const teacherAddStudentBtn = document.getElementById('teacherAddStudentBtn');
+    const teacherStudentTable = document.getElementById('teacherStudentTable');
+
+    // student
+    const studentNameDisplay = document.getElementById('studentNameDisplay');
+    const studentIdDisplay = document.getElementById('studentIdDisplay');
+    const studentEmailDisplay = document.getElementById('studentEmailDisplay');
+    const studentSubjectGrid = document.getElementById('studentSubjectGrid');
+
+    // ----- helpers -----
+    function renderAdminTeachers() {
+      adminTeacherTable.innerHTML = '';
+      if (teachers.length === 0) {
+        adminTeacherTable.innerHTML = '<tr class="empty-row"><td colspan="3">📋 no teachers registered</td></tr>';
+        return;
+      }
+      teachers.forEach((t, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><i class="fas fa-user-circle" style="color:#6aaaff; margin-right:8px;"></i>${escapeHtml(t.name)}</td>
+          <td><span class="badge-id">${escapeHtml(t.id)}</span></td>
+          <td><span class="action-icons"><i class="fas fa-trash-alt" data-index="${idx}" data-type="teacher"></i></span></td>
+        `;
+        adminTeacherTable.appendChild(tr);
+      });
+      // attach delete
+      adminTeacherTable.querySelectorAll('.fa-trash-alt').forEach(icon => {
+        icon.addEventListener('click', function() {
+          const idx = parseInt(this.dataset.index);
+          if (confirm(`Delete teacher "${teachers[idx]?.name}"?`)) {
+            teachers.splice(idx, 1);
+            renderAdminTeachers();
+            // if current teacher deleted, reset
+            if (currentTeacher && !teachers.some(t => t.id === currentTeacher.id)) {
+              currentTeacher = teachers[0] || null;
+              updateTeacherBadge();
+            }
+          }
+        });
+      });
+    }
+
+    function renderTeacherStudents() {
+      teacherStudentTable.innerHTML = '';
+      if (students.length === 0) {
+        teacherStudentTable.innerHTML = '<tr class="empty-row"><td colspan="4">📌 no students yet</td></tr>';
+        return;
+      }
+      students.forEach((s, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><i class="fas fa-user-circle" style="color:#6aaaff; margin-right:8px;"></i>${escapeHtml(s.name)}</td>
+          <td><span class="badge-id">${escapeHtml(s.id)}</span></td>
+          <td>${escapeHtml(s.email)}</td>
+          <td style="text-align:right;">
+            <span class="action-icons">
+              <i class="fas fa-edit" data-index="${idx}" title="manage subjects (demo)"></i>
+              <i class="fas fa-trash-alt" data-index="${idx}" data-type="student"></i>
+            </span>
+          </td>
+        `;
+        teacherStudentTable.appendChild(tr);
+      });
+      // delete student
+      teacherStudentTable.querySelectorAll('.fa-trash-alt').forEach(icon => {
+        icon.addEventListener('click', function() {
+          const idx = parseInt(this.dataset.index);
+          if (confirm(`Delete student "${students[idx]?.name}"?`)) {
+            students.splice(idx, 1);
+            renderTeacherStudents();
+            // if student view is active, update it
+            if (currentRole === 'student') renderStudentView();
+          }
+        });
+      });
+      // edit / manage subjects (demo)
+      teacherStudentTable.querySelectorAll('.fa-edit').forEach(icon => {
+        icon.addEventListener('click', function() {
+          const idx = parseInt(this.dataset.index);
+          const s = students[idx];
+          if (s) {
+            const newSubjects = prompt(`📚 Manage subjects for ${s.name}\nEnter subject names separated by commas:`, s.subjects.join(', '));
+            if (newSubjects !== null) {
+              const cleaned = newSubjects.split(',').map(s => s.trim()).filter(s => s);
+              if (cleaned.length) {
+                s.subjects = cleaned;
+              } else {
+                s.subjects = ['(no subjects)'];
+              }
+              renderTeacherStudents();
+              if (currentRole === 'student') renderStudentView();
+            }
+          }
+        });
+      });
+    }
+
+    function renderStudentView() {
+      // find first student (or use a default)
+      let student = students[0];
+      if (!student) {
+        student = { name: 'No student', id: '---', email: '---', subjects: ['(no data)'] };
+      }
+      studentNameDisplay.textContent = student.name;
+      studentIdDisplay.textContent = student.id;
+      studentEmailDisplay.textContent = student.email;
+      studentSubjectGrid.innerHTML = '';
+      const subs = student.subjects && student.subjects.length ? student.subjects : ['(no subjects)'];
+      subs.forEach(sub => {
+        const div = document.createElement('div');
+        div.className = 'subject-card';
+        div.innerHTML = `<i class="fas fa-atom"></i><h5>${escapeHtml(sub)}</h5><p>● active</p>`;
+        studentSubjectGrid.appendChild(div);
+      });
+    }
+
+    function updateTeacherBadge() {
+      if (currentTeacher) {
+        teacherNameDisplay.textContent = currentTeacher.name;
+      } else {
+        teacherNameDisplay.textContent = 'No teacher';
+      }
+    }
+
+    // escape
+    function escapeHtml(text) {
+      if (!text) return '';
+      const d = document.createElement('div');
+      d.textContent = text;
+      return d.innerHTML;
+    }
+
+    // ----- switch role / panel -----
+    function setRole(role) {
+      currentRole = role;
+      // update login cards
+      loginCards.forEach(card => {
+        card.classList.toggle('active', card.dataset.role === role);
+      });
+      // panels
+      Object.keys(panels).forEach(key => {
+        panels[key].classList.toggle('active', key === role);
+      });
+      // if student, refresh student view
+      if (role === 'student') renderStudentView();
+      if (role === 'teacher') {
+        updateTeacherBadge();
+        renderTeacherStudents();
+      }
+      if (role === 'admin') {
+        renderAdminTeachers();
+      }
+    }
+
+    // ----- login click -----
+    loginCards.forEach(card => {
+      card.addEventListener('click', function() {
+        const role = this.dataset.role;
+        setRole(role);
+      });
+    });
+
+    // ----- ADMIN: add teacher -----
+    adminAddTeacherBtn.addEventListener('click', function() {
+      const name = adminTeacherName.value.trim();
+      const id = adminTeacherId.value.trim();
+      if (!name || !id) { alert('Please enter teacher name and ID.'); return; }
+      if (teachers.some(t => t.id === id)) { alert(`Teacher ID ${id} already exists.`); return; }
+      teachers.push({ name, id });
+      adminTeacherName.value = ''; adminTeacherId.value = '';
+      renderAdminTeachers();
+      if (!currentTeacher) { currentTeacher = teachers[0]; updateTeacherBadge(); }
+    });
+
+    // ----- TEACHER: add student -----
+    teacherAddStudentBtn.addEventListener('click', function() {
+      const name = teacherStudentName.value.trim();
+      const id = teacherStudentId.value.trim();
+      const email = teacherStudentEmail.value.trim();
+      if (!name || !id || !email) { alert('Please fill all fields.'); return; }
+      if (students.some(s => s.id === id)) { alert(`Student ID ${id} already exists.`); return; }
+      students.push({ name, id, email, subjects: ['Mathematics', 'English'] });
+      teacherStudentName.value = ''; teacherStudentId.value = ''; teacherStudentEmail.value = '';
+      renderTeacherStudents();
+      if (currentRole === 'student') renderStudentView();
+    });
+
+    // ----- extra: reset demo (hidden but useful) -----
+    window.resetDemo = function() {
+      teachers = [
+        { name: 'Mr. Clark', id: 'T-101' }
+      ];
+      students = [
+        { name: 'Emma Watson', id: 'S-202', email: 'emma@school.edu', subjects: ['Mathematics', 'Physics', 'Literature'] },
+        { name: 'Liam Carter', id: 'S-203', email: 'liam@school.edu', subjects: ['Chemistry', 'Biology'] }
+      ];
+      currentTeacher = teachers[0];
+      renderAdminTeachers();
+      renderTeacherStudents();
+      if (currentRole === 'student') renderStudentView();
+      updateTeacherBadge();
+    };
+
+    // ----- INIT -----
+    renderAdminTeachers();
+    renderTeacherStudents();
+    updateTeacherBadge();
+    setRole('admin'); // default
+
+    // set current teacher for teacher panel
+    currentTeacher = teachers[0];
+    updateTeacherBadge();
+
+    // if student view needs first student
+    renderStudentView();
+
+  })();
+</script>
+</body>
+</html>
